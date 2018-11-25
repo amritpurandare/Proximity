@@ -5,7 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.estimote.proximity.BuildConfig
 import com.estimote.proximity.MainActivity
-import com.estimote.proximity.MyApplication
+import com.estimote.proximity.ProximityApplication
 import com.estimote.proximity_sdk.api.ProximityObserver
 import com.estimote.proximity_sdk.api.ProximityObserverBuilder
 import com.estimote.proximity_sdk.api.ProximityZoneBuilder
@@ -19,7 +19,7 @@ class ProximityContentManager(private val context: Context) {
     private var proximityObserverHandler: ProximityObserver.Handler? = null
 
     fun start() {
-        val proximityObserver = ProximityObserverBuilder(context, (context.applicationContext as MyApplication).cloudCredentials)
+        val proximityObserver = ProximityObserverBuilder(context, (context.applicationContext as ProximityApplication).cloudCredentials)
                 //.withTelemetryReportingDisabled()
                 .withLowLatencyPowerMode() // This is most reliable mode but may drain the battery
                 .onError { throwable ->
@@ -31,7 +31,7 @@ class ProximityContentManager(private val context: Context) {
                 .build()
 
         val zone = ProximityZoneBuilder()
-                .forTag(MyApplication.applicationTag) // can change the tag
+                .forTag(ProximityApplication.applicationTag) // can change the tag
                 .inFarRange()
                 .onContextChange { contexts ->
                     val nearbyContent = ArrayList<ProximityContent>(contexts.size)

@@ -6,7 +6,7 @@ import com.estimote.proximity_sdk.api.EstimoteCloudCredentials
 /**
  * Shitalkumar
  */
-class MyApplication : Application() {
+class ProximityApplication : Application() {
 
     // static variables defined here
     companion object {
