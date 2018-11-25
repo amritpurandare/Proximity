@@ -8,5 +8,11 @@ import com.estimote.proximity_sdk.api.EstimoteCloudCredentials
  */
 class MyApplication : Application() {
 
-    val cloudCredentials =  EstimoteCloudCredentials("shital-beacons-poc-40c", "4c03a98755a169f224fc5682e7d34a3f")
+    // static variables defined here
+    companion object {
+        val applicationTag = "shital-beacons-poc-40c"
+        val appToken = "4c03a98755a169f224fc5682e7d34a3f"
+    }
+
+    val cloudCredentials = EstimoteCloudCredentials(applicationTag, appToken)
 }
