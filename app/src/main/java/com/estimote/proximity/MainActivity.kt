@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private var proximityContentAdapter: ProximityContentAdapter? = null
     private var mAlertDialog: AlertDialog? = null
     private var D: Boolean = BuildConfig.DEBUG
+    private val TAG: String = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 .fulfillRequirements(this,
                         {
                             if (D) {
-                                Log.d("app", "Permission provided")
+                                Log.d(TAG, "Permission provided")
                             }
                             Toast.makeText(this, "Permission provided", Toast.LENGTH_SHORT).show()
 
@@ -56,14 +57,14 @@ class MainActivity : AppCompatActivity() {
                         },
                         { requirements ->
                             if (D)
-                                Log.e("app", "Permission not provided: " + requirements)
+                                Log.e(TAG, "Permission not provided: " + requirements)
                             Toast.makeText(this, "Permission not provided: " + requirements, Toast.LENGTH_SHORT).show()
                         }
                         ,
                         { throwable ->
                             if (D)
-                                Log.e("app", "Permission Error: " + throwable)
-                            Toast.makeText(this, "Permission Errorr: " + throwable, Toast.LENGTH_SHORT).show()
+                                Log.e(TAG, "Permission Error: " + throwable.message)
+                            Toast.makeText(this, "Permission Errorr: " + throwable.message, Toast.LENGTH_SHORT).show()
                         })
     }
 
@@ -77,8 +78,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         proximityContentManager?.stop()
+        super.onDestroy()
     }
 
     fun setNearbyContent(nearbyContent: List<ProximityContent>) {
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     /**
      *
      */
-    fun showHideLoading(isShow: Boolean) {
+    private fun showHideLoading(isShow: Boolean) {
         try {
             if (mAlertDialog != null) {
                 mAlertDialog?.setCancelable(false)
@@ -101,7 +102,9 @@ class MainActivity : AppCompatActivity() {
                     mAlertDialog?.dismiss()
             }
         } catch (exception: Exception) {
-            exception.printStackTrace()
+            if (D) {
+                exception.printStackTrace()
+            }
         }
     }
 }

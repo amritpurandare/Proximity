@@ -17,6 +17,7 @@ import java.util.*
 class ProximityContentManager(private val context: Context) {
     private var D: Boolean = BuildConfig.DEBUG
     private var proximityObserverHandler: ProximityObserver.Handler? = null
+    private val TAG: String = "ProximityContentManager"
 
     fun start() {
         val proximityObserver = ProximityObserverBuilder(context, (context.applicationContext as ProximityApplication).cloudCredentials)
@@ -24,8 +25,8 @@ class ProximityContentManager(private val context: Context) {
                 .withLowLatencyPowerMode() // This is most reliable mode but may drain the battery
                 .onError { throwable ->
                     if (D) {
-                        Log.e("app", "proximity observer error: $throwable")
-                        Toast.makeText(context, "proximity observer error: $throwable", Toast.LENGTH_SHORT).show()
+                        Log.e(TAG, "proximity observer error: $throwable")
+                        Toast.makeText(context, "proximity observer error: ${throwable.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .build()
@@ -33,6 +34,17 @@ class ProximityContentManager(private val context: Context) {
         val zone = ProximityZoneBuilder()
                 .forTag(ProximityApplication.applicationTag) // can change the tag
                 .inFarRange()
+                .onEnter {
+
+                    if (D) {
+                        Log.d(TAG, "user entered into proximity zone")
+                    }
+                }
+                .onExit {
+                    if (D) {
+                        Log.d(TAG, "user exited the proximity zone")
+                    }
+                }
                 .onContextChange { contexts ->
                     val nearbyContent = ArrayList<ProximityContent>(contexts.size)
                     for (context in contexts) {
@@ -45,7 +57,6 @@ class ProximityContentManager(private val context: Context) {
                     (context as MainActivity).setNearbyContent(nearbyContent)
                 }
                 .build()
-
         proximityObserverHandler = proximityObserver.startObserving(zone)
     }
 
