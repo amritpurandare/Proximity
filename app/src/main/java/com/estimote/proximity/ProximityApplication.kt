@@ -10,9 +10,10 @@ class ProximityApplication : Application() {
 
     // static variables defined here
     companion object {
-        val applicationTag = "shital-beacons-poc-40c"
-        val appToken = "4c03a98755a169f224fc5682e7d34a3f"
+        val applicationTag = "petrol-proximity"
+        val appId = "proximity-poc-fvb"
+        val appToken = "e8af2003046fab4293c91366017fc9ad"
     }
 
-    val cloudCredentials = EstimoteCloudCredentials(applicationTag, appToken)
+    val cloudCredentials = EstimoteCloudCredentials(appId, appToken)
 }

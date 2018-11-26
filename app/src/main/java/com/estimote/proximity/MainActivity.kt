@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     /**
      *
      */
-    private fun showHideLoading(isShow: Boolean) {
+    fun showHideLoading(isShow: Boolean) {
         try {
             if (mAlertDialog != null) {
                 mAlertDialog?.setCancelable(false)

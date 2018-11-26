@@ -18,15 +18,17 @@ class ProximityContentManager(private val context: Context) {
     private var D: Boolean = BuildConfig.DEBUG
     private var proximityObserverHandler: ProximityObserver.Handler? = null
     private val TAG: String = "ProximityContentManager"
+    private var isStopCalled: Boolean = false
 
     fun start() {
         val proximityObserver = ProximityObserverBuilder(context, (context.applicationContext as ProximityApplication).cloudCredentials)
                 //.withTelemetryReportingDisabled()
                 .withLowLatencyPowerMode() // This is most reliable mode but may drain the battery
                 .onError { throwable ->
-                    if (D) {
+                    if (D && !isStopCalled) {
                         Log.e(TAG, "proximity observer error: $throwable")
                         Toast.makeText(context, "proximity observer error: ${throwable.message}", Toast.LENGTH_SHORT).show()
+                        (context as MainActivity).showHideLoading(false)
                     }
                 }
                 .build()
@@ -38,11 +40,13 @@ class ProximityContentManager(private val context: Context) {
 
                     if (D) {
                         Log.d(TAG, "user entered into proximity zone")
+                        Toast.makeText(context, "user entered into proximity zone", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .onExit {
                     if (D) {
                         Log.d(TAG, "user exited the proximity zone")
+                        Toast.makeText(context, "user exited the proximity zone", Toast.LENGTH_SHORT).show()
                     }
                 }
                 .onContextChange { contexts ->
@@ -61,6 +65,7 @@ class ProximityContentManager(private val context: Context) {
     }
 
     fun stop() {
+        isStopCalled = true
         proximityObserverHandler?.stop()
     }
 }
