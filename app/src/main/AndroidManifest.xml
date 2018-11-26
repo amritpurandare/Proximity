@@ -3,7 +3,7 @@
     package="com.estimote.proximity">
 
     <application
-        android:name="com.estimote.proximity.MyApplication"
+        android:name="com.estimote.proximity.ProximityApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

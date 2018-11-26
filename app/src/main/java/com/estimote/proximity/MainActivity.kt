@@ -11,19 +11,18 @@ import com.estimote.proximity.utils.ProximityContent
 import com.estimote.proximity.utils.ProximityContentAdapter
 import com.estimote.proximity.utils.ProximityContentManager
 import dmax.dialog.SpotsDialog
-import java.lang.Exception
 
 /**
  * Shitalkumar
  */
-class MainActivity : AppCompatActivity()
-{
+class MainActivity : AppCompatActivity() {
     private var proximityContentManager: ProximityContentManager? = null
     private var proximityContentAdapter: ProximityContentAdapter? = null
     private var mAlertDialog: AlertDialog? = null
+    private var D: Boolean = BuildConfig.DEBUG
+    private val TAG: String = "MainActivity"
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -46,7 +45,9 @@ class MainActivity : AppCompatActivity()
                 .createEstimoteRequirementsWizard()
                 .fulfillRequirements(this,
                         {
-                            Log.d("app", "Permission provided")
+                            if (D) {
+                                Log.d(TAG, "Permission provided")
+                            }
                             Toast.makeText(this, "Permission provided", Toast.LENGTH_SHORT).show()
 
                             /**
@@ -55,34 +56,33 @@ class MainActivity : AppCompatActivity()
                             startProximityContentManager()
                         },
                         { requirements ->
-                            Log.e("app", "Permission not provided: " + requirements)
+                            if (D)
+                                Log.e(TAG, "Permission not provided: " + requirements)
                             Toast.makeText(this, "Permission not provided: " + requirements, Toast.LENGTH_SHORT).show()
                         }
                         ,
                         { throwable ->
-                            Log.e("app", "Permission Error: " + throwable)
-                            Toast.makeText(this, "Permission Errorr: " + throwable, Toast.LENGTH_SHORT).show()
+                            if (D)
+                                Log.e(TAG, "Permission Error: " + throwable.message)
+                            Toast.makeText(this, "Permission Errorr: " + throwable.message, Toast.LENGTH_SHORT).show()
                         })
     }
 
     /**
      *
      */
-    private fun startProximityContentManager()
-    {
+    private fun startProximityContentManager() {
         showHideLoading(true)
         proximityContentManager = ProximityContentManager(this)
         proximityContentManager?.start()
     }
 
-    override fun onDestroy()
-    {
-        super.onDestroy()
+    override fun onDestroy() {
         proximityContentManager?.stop()
+        super.onDestroy()
     }
 
-    fun setNearbyContent(nearbyContent: List<ProximityContent>)
-    {
+    fun setNearbyContent(nearbyContent: List<ProximityContent>) {
         showHideLoading(false)
         proximityContentAdapter?.setNearbyContent(nearbyContent)
         proximityContentAdapter?.notifyDataSetChanged()
@@ -91,8 +91,7 @@ class MainActivity : AppCompatActivity()
     /**
      *
      */
-    fun showHideLoading(isShow: Boolean)
-    {
+    private fun showHideLoading(isShow: Boolean) {
         try {
             if (mAlertDialog != null) {
                 mAlertDialog?.setCancelable(false)
@@ -102,10 +101,10 @@ class MainActivity : AppCompatActivity()
                 else
                     mAlertDialog?.dismiss()
             }
-        }
-        catch(exception: Exception)
-        {
-           exception.printStackTrace()
+        } catch (exception: Exception) {
+            if (D) {
+                exception.printStackTrace()
+            }
         }
     }
 }
